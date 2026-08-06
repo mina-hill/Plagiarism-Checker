@@ -3,10 +3,10 @@
 A C++ console tool that detects likely plagiarism between text documents by cleaning their text and comparing word-frequency vectors with cosine similarity.
 
 ![C++](https://img.shields.io/badge/Language-C%2B%2B-00599C?style=flat-square&logo=cplusplus&logoColor=white)
-![Data Structures](https://img.shields.io/badge/Topic-Data%20Structures-2a78d6?style=flat-square)
-![Algorithms](https://img.shields.io/badge/Topic-Algorithms-eda100?style=flat-square)
-![Arrays & Pointers](https://img.shields.io/badge/Focus-Arrays%20%26%20Pointers-1baf7a?style=flat-square)
-![Cosine Similarity](https://img.shields.io/badge/Technique-Cosine%20Similarity-eb6834?style=flat-square)
+![Data Structures](https://img.shields.io/badge/Topic-Data%20Structures-4C72B0?style=flat-square)
+![Algorithms](https://img.shields.io/badge/Topic-Algorithms-C9A227?style=flat-square)
+![Arrays & Pointers](https://img.shields.io/badge/Focus-Arrays%20%26%20Pointers-4C9F8A?style=flat-square)
+![Cosine Similarity](https://img.shields.io/badge/Technique-Cosine%20Similarity-DD8452?style=flat-square)
 
 ## Context
 
@@ -40,11 +40,11 @@ flowchart TD
     E --> F[Compute Pairwise Cosine Similarity]
     F --> G[Report Similarity Scores]
 
-    classDef stage1 fill:#2a78d6,stroke:#184f95,stroke-width:2px,color:#ffffff
-    classDef stage2 fill:#eda100,stroke:#8a6200,stroke-width:2px,color:#ffffff
-    classDef stage3 fill:#1baf7a,stroke:#0f7a52,stroke-width:2px,color:#ffffff
-    classDef stage4 fill:#eb6834,stroke:#a5431a,stroke-width:2px,color:#ffffff
-    classDef stage5 fill:#4a3aa7,stroke:#2f2470,stroke-width:2px,color:#ffffff
+    classDef stage1 fill:#4C72B0,stroke:#2E4670,stroke-width:2px,color:#ffffff
+    classDef stage2 fill:#C9A227,stroke:#7A6418,stroke-width:2px,color:#ffffff
+    classDef stage3 fill:#4C9F8A,stroke:#2F6455,stroke-width:2px,color:#ffffff
+    classDef stage4 fill:#DD8452,stroke:#854F31,stroke-width:2px,color:#ffffff
+    classDef stage5 fill:#8172B2,stroke:#574F7A,stroke-width:2px,color:#ffffff
 
     class A stage1
     class B,C stage2
