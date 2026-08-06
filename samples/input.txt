@@ -1,0 +1,5 @@
+StopWords: the a an is are of to and in on at with for as by
+3
+samples/document1.txt
+samples/document2.txt
+samples/document3.txt

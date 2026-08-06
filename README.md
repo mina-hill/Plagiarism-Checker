@@ -40,11 +40,11 @@ flowchart TD
     E --> F[Compute Pairwise Cosine Similarity]
     F --> G[Report Similarity Scores]
 
-    classDef stage1 fill:#4C72B0,stroke:#2E4670,stroke-width:2px,color:#ffffff
-    classDef stage2 fill:#C9A227,stroke:#7A6418,stroke-width:2px,color:#ffffff
-    classDef stage3 fill:#4C9F8A,stroke:#2F6455,stroke-width:2px,color:#ffffff
-    classDef stage4 fill:#DD8452,stroke:#854F31,stroke-width:2px,color:#ffffff
-    classDef stage5 fill:#8172B2,stroke:#574F7A,stroke-width:2px,color:#ffffff
+    classDef stage1 fill:#333333,stroke:#1a1a1a,stroke-width:2px,color:#ffffff
+    classDef stage2 fill:#4d4d4d,stroke:#262626,stroke-width:2px,color:#ffffff
+    classDef stage3 fill:#666666,stroke:#333333,stroke-width:2px,color:#ffffff
+    classDef stage4 fill:#808080,stroke:#4d4d4d,stroke-width:2px,color:#ffffff
+    classDef stage5 fill:#999999,stroke:#666666,stroke-width:2px,color:#1a1a1a
 
     class A stage1
     class B,C stage2
@@ -87,42 +87,31 @@ Two documents that reuse the same words in similar proportions — even if reord
 
 ## Build & Run
 
-`PlagiarismChecker.cpp` implements the processing pipeline described above as a set of free functions and helper classes — it does **not** define a `main()` entry point in this file. To actually run it, pair it with a small driver that calls the declared functions in sequence, for example:
+`PlagiarismChecker.cpp` implements the processing pipeline described above as a set of free functions and helper classes — it does **not** define a `main()` entry point in this file. This repo includes a small reference driver, [`demo/main.cpp`](demo/main.cpp), that wires the declared functions together in the order the pipeline expects, plus ready-to-use sample data under [`samples/`](samples/):
 
-```cpp
-#include ... // include PlagiarismChecker.cpp or link its translation unit
+- [`samples/input.txt`](samples/input.txt) — the master file: a `StopWords:` line, a document count, then one document path per line
+- [`samples/document1.txt`](samples/document1.txt) and [`samples/document2.txt`](samples/document2.txt) — two paraphrased documents on the same topic (high expected similarity)
+- [`samples/document3.txt`](samples/document3.txt) — an unrelated document (low expected similarity), to show the contrast
 
-int main() {
-    readInput("input.txt");          // parses stopwords, doc count, and doc paths
-    removePunctuationMarks();
-    convertUpperToLowerCase();
-    removeStopWords();
-
-    char** uniqueWords; int uniqueCount; int** docFrequency;
-    generateFrequencies(uniqueWords, uniqueCount, docFrequency);
-
-    double** similarities;
-    calculateAllCosineSimilarities(similarities, docFrequency);
-
-    int n = getNumberOfDocument();
-    for (int i = 1; i <= n; i++)
-        for (int j = i + 1; j <= n; j++)
-            std::cout << "Doc " << i << " vs Doc " << j << ": "
-                       << similarityIn(i, j) << "%\n";
-}
-```
-
-Once you have a driver in place, compile with any standard C++ compiler:
+Build and run:
 
 ```bash
-g++ PlagiarismChecker.cpp -o PlagiarismChecker
-./PlagiarismChecker
+g++ PlagiarismChecker.cpp demo/main.cpp -o plagiarism_checker
+./plagiarism_checker samples/input.txt
 ```
 
-Prepare an `input.txt` master file pointing at your document files as described above, and place it (and the documents it references) where the program can find them by the paths given.
+To try your own documents, copy `samples/input.txt`'s format: a `Label: stopword list` line, the document count as a plain integer, then one file path per line — the count must match the number of paths listed.
 
 ## Design Notes
 
 - Fixed-size limits: `MAX_WORDS` and `MAX_LINE_LENGTH` (both 1000) bound the buffers used while parsing, in keeping with the assignment's low-level, array-based approach.
 - All string handling — copying, length calculation, equality checks, word splitting — is implemented manually (`copyString`, `getStringLength`, `areStringsEqual`, `countWords`) rather than relying on `<string>` or `<cstring>`.
 - The `Storage`, `InputOrganizer`, and `Document` classes each own their heap-allocated arrays and free them in their destructors.
+
+## Known Limitations
+
+Documented here rather than silently fixed, to keep this repo an accurate copy of the original assignment submission:
+
+- **`Storage`'s constructor over-copies by one element.** When built from an existing `wordList`, it allocates `words`/`lineLengths` with `lineNum` slots but its copy loop runs `lineNum + 1` times (`for (int i = 0; i < lineNum+1; i++)`), writing one element past the end of both arrays. In practice the extra slot usually lands in adjacent heap space without an immediate crash, but it's technically undefined behavior — worth knowing before feeding it very large inputs.
+- **No `main()` in `PlagiarismChecker.cpp`.** See [Build & Run](#build--run) above for the provided reference driver.
+- This code was not compiled in the environment used to write this README (no C++ toolchain was available there) — the driver and sample data are provided as a faithful, format-accurate usage reference rather than a CI-verified build.
